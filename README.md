@@ -25,7 +25,7 @@ This project lets you pick between the **authentic full Cinnamon Edition** ðŸ–¥ï
 Clone this repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/docker-linuxmint-desktop.git
+git clone https://github.com/MohammadKobirShah/docker-linuxmint-desktop.git
 cd docker-linuxmint-desktop
 ```
 
