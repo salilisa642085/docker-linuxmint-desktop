@@ -1,126 +1,134 @@
-Perfect 🍃🐉 —  so it clearly offers **two editions** of Linux Mint inside Docker:  
-
-1. **Cinnamon Edition** (full Mint desktop, authentic but heavier)  
-2. **XFCE Edition** (lightweight, faster build, smaller footprint, but still themed Mint style)  
-
-This way users can pick the flavor they prefer.  
-
-
-# 🍃 Linux Mint 22.1 Desktop in Docker (with VNC + noVNC)
+# 🍃 Linux Mint 22.1 Desktop in Docker (Cinnamon & XFCE Editions)
 
 Run a **Linux Mint 22.1 (Wilma)** desktop inside Docker with **VNC** and **noVNC (browser access)**.  
-This setup provides a **full Mint Cinnamon desktop** (default) OR a lightweight **Mint XFCE edition** — both accessible remotely! 🚀  
+This project lets you pick between the **authentic full Cinnamon Edition** 🖥️ or a **lightweight XFCE Edition** ⚡ — both accessible remotely!  
 
 ---
 
 ## ✨ Features
-- Full **Linux Mint 22.1 desktop experience** inside Docker  
-- Two editions available:
-  - 🖥️ **Cinnamon Edition** → Authentic Mint look (default Mint flavor)  
-  - ⚡ **XFCE Edition** → Lightweight desktop with Mint themes and Mint‑Y icons  
-- Access via:
-  - **VNC client** (port `5901`)  
-  - **noVNC web browser** (port `6080`)  
-- **Mint themes, icons, wallpapers** pre‑included  
-- Firefox ESR + utilities (`git`, `vim`, `curl`, etc.)  
+- Full **Linux Mint 22.1 desktop environments** inside Docker  
+- Two editions provided:
+  - 🖥️ **Cinnamon Edition** → Authentic Mint Cinnamon desktop (default Mint flavor)  
+  - ⚡ **XFCE Edition** → Lightweight XFCE with Mint-Y themes/icons  
+- **Access methods:**
+  - VNC clients (`5901` Cinnamon, `5902` XFCE)  
+  - noVNC for browsers (`6080` Cinnamon, `6081` XFCE)  
+- Linux Mint look and feel with **Mint-Y themes, icons & wallpapers**  
+- Firefox preinstalled  
+- Useful tools (vim, git, curl, wget, etc.) included  
+- Self-contained using Docker Compose  
 
 ---
 
-## 📦 Build the Image
+## 📦 Build the Images
 
-Clone the repo and build the image:
+Clone this repository:
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/docker-linuxmint-desktop.git
 cd docker-linuxmint-desktop
 ```
 
----
+Build either Cinnamon or XFCE manually:
 
-### 🖥️ Cinnamon Edition (default Mint look)
 ```bash
+# Build Cinnamon Edition
 docker build -t mint-cinnamon -f Dockerfile.cinnamon .
-```
 
-### ⚡ XFCE Edition (light but Mint‑themed)
-```bash
+# Build XFCE Edition
 docker build -t mint-xfce -f Dockerfile.xfce .
 ```
 
 ---
 
-## 🚀 Run the Container
+## 🚀 Run with Docker
 
-**Run Cinnamon edition**  
+Run Cinnamon:
 ```bash
 docker run -it -p 5901:5901 -p 6080:6080 --name mint-cinnamon mint-cinnamon
 ```
 
-**Run XFCE edition**  
+Run XFCE:
 ```bash
 docker run -it -p 5902:5901 -p 6081:6080 --name mint-xfce mint-xfce
 ```
 
+Then access them:
+
+- Cinnamon → <http://localhost:6080>  
+- XFCE → <http://localhost:6081>  
+
 ---
 
-## 🖥️ Access the Mint Desktop
+## ⚡ Quick Start with Docker Compose
 
-- **NoVNC (browser):**  
-  ```
-  http://localhost:6080   # Cinnamon
-  http://localhost:6081   # XFCE
-  ```
+Run **both Cinnamon & XFCE at once** with a single command:
 
-- **VNC Client:**  
-  ```
-  localhost:5901   # Cinnamon
-  localhost:5902   # XFCE
-  ```
+```bash
+docker compose up -d
+```
+
+- Cinnamon:  
+  - Browser → <http://localhost:6080>  
+  - VNC → `localhost:5901`
+
+- XFCE:  
+  - Browser → <http://localhost:6081>  
+  - VNC → `localhost:5902`
+
+Stop everything:
+```bash
+docker compose down
+```
 
 ---
 
 ## 📂 Project Layout
+
 ```
 .
-├── Dockerfile.cinnamon   # Mint Cinnamon desktop in Docker
-├── Dockerfile.xfce       # Mint XFCE desktop in Docker
+├── Dockerfile.cinnamon   # Full Cinnamon Edition desktop
+├── Dockerfile.xfce       # Lightweight XFCE Edition desktop
+├── docker-compose.yml    # One-click startup for both editions
 ├── README.md             # Documentation (this file)
-└── screenshot.png        # Example screenshot of Mint desktop
+└── screenshot.png        # Example screenshot (Cinnamon shown)
 ```
-
----
-
-## ⚠️ Security Notice
-Currently configured with:
-- **No VNC password** (`--I-KNOW-THIS-IS-INSECURE`)  
-- **Self‑signed TLS cert** for noVNC  
-
-👉 Use this for **local labs/testing** only.  
-For remote use, enable VNC password, real certificates, and secure access via reverse proxy or VPN.  
 
 ---
 
 ## 🍃 Example Screenshot
 
 <p align="center">
-  <img src="screenshot.png" alt="Linux Mint 22.1 Cinnamon Desktop" width="800"/><br/>
-  <em>This is Linux Mint 22.1 Cinnamon running inside Docker, accessible via noVNC.</em>
+  <img src="screenshot.png" alt="Linux Mint 22.1 Cinnamon Desktop in Docker" width="800"/><br/>
+  <em>Linux Mint 22.1 Cinnamon desktop running inside Docker, accessible via noVNC.</em>
 </p>
+
+---
+
+## ⚠️ Security Notice
+
+This setup currently uses:  
+- **No VNC password** (`--I-KNOW-THIS-IS-INSECURE`)  
+- **Self-signed TLS certificate** for noVNC  
+
+It is intended for **local labs, development, or testing**.  
+If deploying remotely:  
+- Set a password for VNC (`vncpasswd`)  
+- Use production HTTPS certificates (e.g. via Nginx/Let’s Encrypt)  
+- Protect ports behind a firewall, VPN, or reverse proxy  
 
 ---
 
 ## 🛠️ Troubleshooting
 
-- **Package not found** → Run `apt-get update` inside the container, then try again.  
-- **Blank VNC screen** → Make sure Cinnamon (`cinnamon-core`) or XFCE (`xfce4`) is installed and session starts correctly.  
-- **High CPU usage** → Disable extra effects under Mint settings.  
-- **Port collisions** → Adjust `-p` mappings when running multiple editions.  
+- **Blank VNC screen** → Ensure `cinnamon-core` or `xfce4` is installed correctly, and session startup is pointing to the correct DE.  
+- **Port conflicts** → Adjust `-p` mappings in `docker run` or `docker-compose.yml`.  
+- **High resource usage** → Cinnamon is heavier; XFCE is recommended for lightweight use.  
+- **Missing packages** → Inside the container, run `apt-get update` and re-install.  
 
 ---
 
 ## 📜 License
 This project is provided under the **MIT License**.  
-Linux Mint is © by **Clement Lefebvre & The Linux Mint Team**.  
-This repo provides Dockerized environments for convenience only.  
-
-✅ This way, your GitHub shows **two parallel builds (Cinnamon + XFCE)**, and users know exactly how to build and run the one they prefer.  
+Linux Mint is a trademark of **Clement Lefebvre & The Linux Mint Team**.  
+This repo simply provides Dockerized environments of Mint for testing and convenience.  
