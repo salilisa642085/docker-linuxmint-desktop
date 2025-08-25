@@ -1,10 +1,11 @@
-# Linux Mint 22.1 XFCE -- based on Ubuntu 24.04 (Noble) base
+# Linux Mint 22.1 XFCE Edition desktop in Docker
+# Based on Ubuntu 24.04 (Noble Numbat)
 FROM --platform=linux/amd64 ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
-# Update + core utilities
+# Update and tools
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     software-properties-common \
     sudo wget curl git vim net-tools xterm tzdata ca-certificates \
@@ -12,11 +13,11 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     tigervnc-standalone-server novnc websockify \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Add Linux Mint 22.1 "Wilma" repo
+# Add Linux Mint repo for 22.1 "Wilma"
 RUN add-apt-repository "deb http://packages.linuxmint.com wilma main upstream import backport" && \
     apt-get update -y
 
-# Install XFCE desktop + Mint theming (Mint XFCE Edition look)
+# Install XFCE DE + Mint theming
 RUN apt-get install -y --no-install-recommends \
     xfce4 xfce4-goodies \
     mint-themes \
@@ -27,14 +28,14 @@ RUN apt-get install -y --no-install-recommends \
     firefox \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Prep X11 authority file for VNC
+# Prep X11 for VNC
 RUN touch /root/.Xauthority
 
-# Expose VNC (5901) and noVNC WebSocket (6080)
+# Expose VNC + noVNC
 EXPOSE 5901
 EXPOSE 6080
 
-# Start XFCE session under VNC + websockify (no password, self-signed cert)
+# Start XFCE desktop under VNC
 CMD bash -c '\
     vncserver -localhost no -SecurityTypes None -geometry 1280x800 --I-KNOW-THIS-IS-INSECURE && \
     openssl req -new -subj "/C=JP" -x509 -days 365 -nodes -out self.pem -keyout self.pem && \
