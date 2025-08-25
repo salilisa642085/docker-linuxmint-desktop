@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  mint-cinnamon:
+    build:
+      context: .
+      dockerfile: Dockerfile.cinnamon
+    container_name: mint-cinnamon
+    ports:
+      - "5901:5901"   # VNC (Cinnamon)
+      - "6080:6080"   # noVNC (Cinnamon)
+    restart: unless-stopped
+
+  mint-xfce:
+    build:
+      context: .
+      dockerfile: Dockerfile.xfce
+    container_name: mint-xfce
+    ports:
+      - "5902:5901"   # VNC (XFCE)
+      - "6081:6080"   # noVNC (XFCE)
+    restart: unless-stopped
